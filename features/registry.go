@@ -57,3 +57,12 @@ func (m Middlewares) String() string {
 	}
 	return s[:len(s)-1] // trim trailing comma
 }
+
+// Packages gets the list of packages in m.
+func (m Middlewares) Packages() []string {
+	imports := make([]string, len(m))
+	for i, mid := range m {
+		imports[i] = mid.Package
+	}
+	return imports
+}
