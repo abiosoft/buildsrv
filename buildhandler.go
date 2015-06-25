@@ -13,7 +13,7 @@ import (
 	"github.com/caddyserver/buildsrv/features"
 )
 
-func handleBuild(w http.ResponseWriter, r *http.Request) {
+func buildHandler(w http.ResponseWriter, r *http.Request) {
 	goOS := r.URL.Query().Get("os")
 	goArch := r.URL.Query().Get("arch")
 	goARM := r.URL.Query().Get("arm")
@@ -125,4 +125,36 @@ loop:
 	}
 
 	io.Copy(w, f)
+}
+
+// checkInput checks the arguments for valid values and returns an error
+// if any one of them is invalid.
+func checkInput(goOS, goArch, goARM string, featureList []string) error {
+	// Check for required fields
+	if goOS == "" {
+		return errors.New("missing os parameter")
+	}
+	if goArch == "" {
+		return errors.New("missing arch parameter")
+	}
+
+	// Check for valid input
+	if !allowedOS.contains(goOS) {
+		return errors.New("os not supported")
+	}
+	if !allowedArch.contains(goArch) {
+		return errors.New("arch not supported")
+	}
+	if goARM != "" && !allowedARM.contains(goARM) {
+		return errors.New("arm version not supported")
+	}
+
+	// Check features
+	for _, feature := range featureList {
+		if !features.Registry.Contains(feature) {
+			return errors.New("unknown feature '" + feature + "'")
+		}
+	}
+
+	return nil
 }

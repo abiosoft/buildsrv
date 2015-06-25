@@ -1,21 +1,40 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/signal"
+	"strings"
 	"sync"
 	"time"
+)
 
-	"github.com/caddyserver/buildsrv/features"
+const (
+	// Path to the builds. The directory is fully managed, so just
+	// choose one that is solely for builds; it may get deleted.
+	buildPath = "builds"
+
+	// How long builds live before being deleted
+	buildExpiry = 24 * time.Hour
+
+	// Canonical package name of Caddy's main
+	mainCaddyPackage = "github.com/mholt/caddy"
 )
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
+
+	// Get GOPATH and path of caddy project
+	cmd := exec.Command("go", "env", "GOPATH")
+	result, err := cmd.Output()
+	if err != nil {
+		log.Fatal("Cannot locate GOPATH:", err)
+	}
+	caddyPath = strings.TrimSpace(string(result)) + "/src/" + mainCaddyPackage
 }
 
 func main() {
@@ -33,7 +52,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	http.HandleFunc("/download/build", handleBuild)
+	http.HandleFunc("/download/build", buildHandler)
 	http.Handle("/download/builds/", http.StripPrefix("/download/builds/", http.FileServer(http.Dir(buildPath))))
 	http.HandleFunc("/online", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
 
@@ -49,43 +68,6 @@ func handleError(w http.ResponseWriter, r *http.Request, err error, status int) 
 	} else {
 		http.Error(w, err.Error(), status)
 	}
-}
-
-// checkInput checks the arguments for valid values and returns an error
-// if any one of them is invalid.
-func checkInput(goOS, goArch, goARM string, featureList []string) error {
-	// Check for required fields
-	if goOS == "" {
-		return errors.New("missing os parameter")
-	}
-	if goArch == "" {
-		return errors.New("missing arch parameter")
-	}
-
-	// Check for valid input
-	if !allowedOS.contains(goOS) {
-		return errors.New("os not supported")
-	}
-	if !allowedArch.contains(goArch) {
-		return errors.New("arch not supported")
-	}
-	if goARM != "" && !allowedARM.contains(goARM) {
-		return errors.New("arm version not supported")
-	}
-
-	// Check features
-	for _, feature := range featureList {
-		if !features.Registry.Contains(feature) {
-			return errors.New("unknown feature '" + feature + "'")
-		}
-	}
-
-	return nil
-}
-
-// buildHash creates a string that uniquely identifies a kind of build
-func buildHash(goOS, goArch, goARM, orderedFeatures string) string {
-	return fmt.Sprintf("%s:%s:%s:%s", goOS, goArch, goARM, orderedFeatures)
 }
 
 // codeGen is the function that mutates a copy of the project so that
@@ -110,21 +92,6 @@ func (l list) contains(target string) bool {
 	return false
 }
 
-// Build represents a custom build job.
-type Build struct {
-	sync.Mutex
-	DoneChan         chan struct{}
-	OutputFile       string
-	DownloadFilename string
-	DownloadFile     string
-	GoOS             string
-	GoArch           string
-	GoARM            string
-	Features         features.Middlewares
-	Hash             string
-	Expires          time.Time
-}
-
 var (
 	allowedOS   = list{"linux", "darwin", "windows", "freebsd", "openbsd"}
 	allowedArch = list{"386", "amd64", "arm"}
@@ -132,10 +99,7 @@ var (
 
 	builds      = make(map[string]Build)
 	buildsMutex sync.Mutex // protects the builds map
-)
 
-const (
-	buildPath   = "builds"
-	caddyPath   = "/Users/matt/Dev/src/github.com/mholt/caddy" // TODO: Get from env
-	buildExpiry = 24 * time.Hour
+	// Path to the caddy project repository
+	caddyPath string
 )

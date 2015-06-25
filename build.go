@@ -2,15 +2,38 @@ package main
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"strconv"
+	"sync"
 	"time"
 
+	"github.com/caddyserver/buildsrv/features"
 	"github.com/mholt/custombuild"
 )
+
+// Build represents a custom build job.
+type Build struct {
+	sync.Mutex
+	DoneChan         chan struct{}
+	OutputFile       string
+	DownloadFilename string
+	DownloadFile     string
+	GoOS             string
+	GoArch           string
+	GoARM            string
+	Features         features.Middlewares
+	Hash             string
+	Expires          time.Time
+}
+
+// buildHash creates a string that uniquely identifies a kind of build
+func buildHash(goOS, goArch, goARM, orderedFeatures string) string {
+	return fmt.Sprintf("%s:%s:%s:%s", goOS, goArch, goARM, orderedFeatures)
+}
 
 // build performs a build job. It's blocking, so run it in a goroutine.
 // It writes errors to the standard log.
