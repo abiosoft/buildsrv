@@ -25,22 +25,13 @@ func buildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Make sure build hashes won't end up different
+	// Keep build hashes consistent with varying input
 	if goArch != "arm" {
 		goARM = ""
 	}
 
 	// Put features in order to keep hashes consistent and for use in the codegen function
-	var orderedFeatures features.Middlewares // TODO - could this be a []string instead? Would make things a little simpler, not needing that String() method
-loop:
-	for _, m := range features.Registry {
-		for _, feature := range featureList {
-			if feature == m.Directive {
-				orderedFeatures = append(orderedFeatures, m)
-				continue loop
-			}
-		}
-	}
+	orderedFeatures := sortFeatures(featureList)
 
 	// Create 'hash' to identify this build
 	hash := buildHash(goOS, goArch, goARM, orderedFeatures.String())
@@ -73,7 +64,7 @@ loop:
 			buildFilename += ".exe"
 		}
 
-		b = Build{
+		b = &Build{
 			DoneChan:         make(chan struct{}),
 			OutputFile:       downloadPath + "/" + buildFilename,
 			DownloadFile:     downloadPath + "/" + downloadFilename,
@@ -90,7 +81,7 @@ loop:
 		buildsMutex.Unlock()
 
 		// Perform build (blocking)
-		err = build(b)
+		err = b.Build()
 		if err != nil {
 			handleError(w, r, err, http.StatusInternalServerError)
 			return
@@ -157,4 +148,18 @@ func checkInput(goOS, goArch, goARM string, featureList []string) error {
 	}
 
 	return nil
+}
+
+func sortFeatures(featureList []string) features.Middlewares {
+	var orderedFeatures features.Middlewares // TODO - could this be a []string instead? Would make things a little simpler, not needing that String() method
+loop:
+	for _, m := range features.Registry {
+		for _, feature := range featureList {
+			if feature == m.Directive {
+				orderedFeatures = append(orderedFeatures, m)
+				continue loop
+			}
+		}
+	}
+	return orderedFeatures
 }

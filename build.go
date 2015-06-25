@@ -1,9 +1,7 @@
 package main
 
 import (
-	"archive/zip"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -28,105 +26,101 @@ type Build struct {
 	Features         features.Middlewares
 	Hash             string
 	Expires          time.Time
+	finished         bool
 }
 
-// buildHash creates a string that uniquely identifies a kind of build
-func buildHash(goOS, goArch, goARM, orderedFeatures string) string {
-	return fmt.Sprintf("%s:%s:%s:%s", goOS, goArch, goARM, orderedFeatures)
-}
-
-// build performs a build job. It's blocking, so run it in a goroutine.
-// It writes errors to the standard log.
-func build(job Build) error {
+// Build performs a build job. This function is blocking. If the build
+// job succeeds, it will automatically delete itself when it expires.
+func (b *Build) Build() error {
+	// Prepare the build
 	builder, err := custombuild.New(caddyPath, codeGen, []string{ /*TODO*/ })
 	defer builder.Teardown() // always perform cleanup
 	if err != nil {
 		return err
 	}
 
-	if job.GoArch == "arm" {
-		armInt, err := strconv.Atoi(job.GoARM)
+	// Perform the build
+	if b.GoArch == "arm" {
+		armInt, err := strconv.Atoi(b.GoARM)
 		if err != nil {
 			return err
 		}
-		err = builder.BuildARM(job.GoOS, armInt, job.OutputFile)
+		err = builder.BuildARM(b.GoOS, armInt, b.OutputFile)
 	} else {
-		err = builder.Build(job.GoOS, job.GoArch, job.OutputFile)
+		err = builder.Build(b.GoOS, b.GoArch, b.OutputFile)
 	}
 	if err != nil {
 		return err
 	}
 
-	// Create archive
-	out, err := os.Create(job.DownloadFile)
-	if err != nil {
-		return err
-	}
-
-	w := zip.NewWriter(out)
-	for _, fpath := range []string{
+	// Compress the build
+	err = Zip(b.DownloadFile, []string{
 		filepath.Join(caddyPath, "/dist/README.txt"),
 		filepath.Join(caddyPath, "/dist/LICENSES.txt"),
 		filepath.Join(caddyPath, "/dist/CHANGES.txt"),
-		job.OutputFile,
-	} {
-		fin, err := os.Open(fpath)
-		if err != nil {
-			return err
-		}
-
-		fout, err := w.Create(filepath.Base(fpath))
-		if err != nil {
-			w.Close()
-			fin.Close()
-			return err
-		}
-
-		_, err = io.Copy(fout, fin)
-		if err != nil {
-			w.Close()
-			fin.Close()
-			return err
-		}
-
-		fin.Close()
-	}
-
-	// Finish and close zip file
-	err = w.Close()
+		b.OutputFile,
+	})
 	if err != nil {
 		return err
 	}
 
 	// Delete uncompressed binary
-	err = os.Remove(job.OutputFile)
+	err = os.Remove(b.OutputFile)
 	if err != nil {
 		return err
 	}
 
-	// Build is ready
-	close(job.DoneChan)
-	job.Expires = time.Now().Add(buildExpiry)
-	buildsMutex.Lock()
-	builds[job.Hash] = job
-	buildsMutex.Unlock()
-
-	// Build expires after some time; run in goroutine
-	// so this function can return and cleanup right away
-	go func() {
-		time.Sleep(buildExpiry)
-
-		// Delete the job
-		buildsMutex.Lock()
-		delete(builds, job.Hash)
-		buildsMutex.Unlock()
-
-		// Delete file and its folder
-		err := os.RemoveAll(filepath.Dir(job.DownloadFile))
-		if err != nil {
-			log.Println(err)
-		}
-	}()
+	// Finalize the build and have it clean itself
+	// up after its expiration
+	b.finish()
 
 	return nil
+}
+
+// finish finishes a job. Call this after the job is
+// done with its build process and the result is ready
+// for use. When this method is called, its lifetime
+// begins and the build will be deleted after the
+// expiration time.
+func (b *Build) finish() {
+	if b.finished {
+		return
+	}
+
+	// Notify anyone waiting for the job to finish that it's done
+	close(b.DoneChan)
+
+	// Save the build in the master list
+	buildsMutex.Lock()
+	builds[b.Hash] = b
+	buildsMutex.Unlock()
+
+	// Make this idempotent
+	b.finished = true
+
+	if buildExpiry > 0 {
+		// Build lifetime starts now
+		b.Expires = time.Now().Add(buildExpiry)
+
+		// Delete build after expiration time
+		go func() {
+			time.Sleep(buildExpiry)
+
+			// Delete the job
+			buildsMutex.Lock()
+			delete(builds, b.Hash)
+			buildsMutex.Unlock()
+
+			// Delete file and its folder
+			err := os.RemoveAll(filepath.Dir(b.DownloadFile))
+			if err != nil {
+				log.Println(err)
+			}
+		}()
+	}
+}
+
+// buildHash creates a string that uniquely identifies a kind of build
+func buildHash(goOS, goArch, goARM, orderedFeatures string) string {
+	return fmt.Sprintf("%s:%s:%s:%s", goOS, goArch, goARM, orderedFeatures)
 }
