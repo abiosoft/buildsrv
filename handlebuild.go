@@ -114,7 +114,7 @@ loop:
 	}
 	defer f.Close()
 
-	w.Header().Set("Location", buildBase+"/download/"+b.DownloadFile)
+	w.Header().Set("Location", "/download/"+b.DownloadFile)
 	w.Header().Set("Expires", b.Expires.Format(http.TimeFormat))
 	w.Header().Set("Content-Disposition", "attachment; filename=\""+b.DownloadFilename+"\"")
 

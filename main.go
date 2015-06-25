@@ -135,7 +135,6 @@ var (
 )
 
 const (
-	buildBase   = "http://localhost:5050" // TODO - change this for production
 	buildPath   = "builds"
 	caddyPath   = "/Users/matt/Dev/src/github.com/mholt/caddy" // TODO: Get from env
 	buildExpiry = 24 * time.Hour
