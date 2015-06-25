@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -33,7 +33,7 @@ type Build struct {
 // job succeeds, it will automatically delete itself when it expires.
 func (b *Build) Build() error {
 	// Prepare the build
-	builder, err := custombuild.New(caddyPath, codeGen, []string{ /*TODO*/ })
+	builder, err := custombuild.New(CaddyPath, nil, []string{ /*TODO*/ })
 	defer builder.Teardown() // always perform cleanup
 	if err != nil {
 		return err
@@ -55,9 +55,9 @@ func (b *Build) Build() error {
 
 	// Compress the build
 	err = Zip(b.DownloadFile, []string{
-		filepath.Join(caddyPath, "/dist/README.txt"),
-		filepath.Join(caddyPath, "/dist/LICENSES.txt"),
-		filepath.Join(caddyPath, "/dist/CHANGES.txt"),
+		filepath.Join(CaddyPath, "/dist/README.txt"),
+		filepath.Join(CaddyPath, "/dist/LICENSES.txt"),
+		filepath.Join(CaddyPath, "/dist/CHANGES.txt"),
 		b.OutputFile,
 	})
 	if err != nil {
@@ -98,13 +98,13 @@ func (b *Build) finish() {
 	// Make this idempotent
 	b.finished = true
 
-	if buildExpiry > 0 {
+	if BuildExpiry > 0 {
 		// Build lifetime starts now
-		b.Expires = time.Now().Add(buildExpiry)
+		b.Expires = time.Now().Add(BuildExpiry)
 
 		// Delete build after expiration time
 		go func() {
-			time.Sleep(buildExpiry)
+			time.Sleep(BuildExpiry)
 
 			// Delete the job
 			buildsMutex.Lock()

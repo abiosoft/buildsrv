@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"errors"
@@ -13,7 +13,8 @@ import (
 	"github.com/caddyserver/buildsrv/features"
 )
 
-func buildHandler(w http.ResponseWriter, r *http.Request) {
+// BuildHandler is the endpoint which creates and/or responds with builds.
+func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	goOS := r.URL.Query().Get("os")
 	goArch := r.URL.Query().Get("arch")
 	goARM := r.URL.Query().Get("arm")
@@ -51,7 +52,7 @@ func buildHandler(w http.ResponseWriter, r *http.Request) {
 		for {
 			// find a suitable random number not already in use
 			random := strconv.Itoa(rand.Intn(100) + 899)
-			downloadPath = buildPath + "/" + ts + random
+			downloadPath = BuildPath + "/" + ts + random
 			_, err := os.Stat(downloadPath)
 			if os.IsNotExist(err) {
 				break
@@ -150,6 +151,7 @@ func checkInput(goOS, goArch, goARM string, featureList []string) error {
 	return nil
 }
 
+// sortFeatures sorts features to the order in which they are registered.
 func sortFeatures(featureList []string) features.Middlewares {
 	var orderedFeatures features.Middlewares // TODO - could this be a []string instead? Would make things a little simpler, not needing that String() method
 loop:
