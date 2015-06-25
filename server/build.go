@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/caddyserver/buildsrv/features"
-	"github.com/mholt/custombuild"
+	"github.com/caddyserver/caddydev/caddybuild"
 )
 
 // Build represents a custom build job.
@@ -33,7 +33,7 @@ type Build struct {
 // job succeeds, it will automatically delete itself when it expires.
 func (b *Build) Build() error {
 	// Prepare the build
-	builder, err := custombuild.New(CaddyPath, nil, []string{ /*TODO*/ })
+	builder, err := caddybuild.PrepareBuild(b.Features)
 	defer builder.Teardown() // always perform cleanup
 	if err != nil {
 		return err
