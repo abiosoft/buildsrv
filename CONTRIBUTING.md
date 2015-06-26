@@ -1,14 +1,21 @@
-Contributing Guidelines
-========================
+Contributing 
+=============
 
 **[Join us on Slack](https://gophers.slack.com/messages/caddy/)** to chat with other Caddy developers! ([Request an invite](http://bit.ly/go-slack-signup), then join the #caddy channel.)
 
 
-## Middleware Registry
+## The Middleware Registry
 
-The middleware registry is the official list of packages that can be distributed with Caddy on Caddy's website. Registering a package here can greatly expand Caddy's base functionality and benefit more users.
+The middleware registry is the official list of packages that can be distributed with Caddy on Caddy's website. Registering a package [here](https://github.com/caddyserver/buildsrv/blob/master/features/registry.go) can greatly extend Caddy's functionality and benefit more users.
 
 The word "middleware" technically refers to an HTTP handler that is executed during a request. Caddy directives usually invoke a layer of middleware, but they may also start a background service that does not chain in any HTTP handler. For simplicity, we refer to either kind of package as middleware.
+
+
+### Writing middleware
+
+This project will accept registrations that meet the requirements listed below. **Please open an issue before starting work on your add-on middleware. State specifically what it will do, where it will go in the middleware chain, and how it will look in the Caddyfile.** We and the community may work with you to fine-tune things. This helps prevent duplicated effort and keeps the project on-task to meet its goals.
+
+Use the [caddydev](https://github.com/caddyserver/caddydev) program to help you test your custom middleware.
 
 
 ### Requirements and Terms
@@ -42,6 +49,8 @@ Packages that are in the registry may be removed at any time for any reason. Usu
 
 ### Registering your middleware
 
-< TODO: Instructions >
+1. Open a pull request to add your middleware's **directive** and **package name** to [the Registry variable in registry.go](https://github.com/caddyserver/buildsrv/blob/master/features/registry.go).
+
+2. That's it! We'll take a look.
 
 By submitting a pull request, you verify that you are the project owner or that the project owner has given permission to integrate the package with Caddy. You also understand and agree to comply with the terms and requirements. Adding packages to the registry does not imply endorsement by Caddy, but you may say that your package is available as Caddy middleware.

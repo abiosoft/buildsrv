@@ -1,15 +1,18 @@
 package features
 
-// TODO - this will change before long
+// Official add-on middleware registry. To register your middleware,
+// add it to this list in the proper place.
 var Registry = Middlewares{
 	// Essential directives that initialize vital configuration settings
 	{"root", ""},
 	{"tls", ""},
 	{"bind", ""},
+
 	// Other directives that don't necessarily create HTTP handlers
 	{"startup", ""},
 	{"shutdown", ""},
 	{"git", ""},
+
 	// Directives that inject handlers (middleware)
 	{"log", ""},
 	{"gzip", ""},
