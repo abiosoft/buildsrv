@@ -23,7 +23,7 @@ Use the [caddydev](https://github.com/caddyserver/caddydev) program to help you 
 To add your package to the middleware registry, it must meet the following requirements.
 
 
-- The directive name must one lowercase word, unique and differentiable from other directives. It must be clear and obvious what the directive does, not misleading. This is important to maintain consistency and make it easy for users. Choose carefully, since it cannot be changed except by rare exception.
+- The directive name must one lowercase word (excepting brand names, which must be combined to appear as one lowercase word). It must be unique and differentiable from other directives, as well as clear and obvious what the directive does (not misleading). This is important to maintain consistency and make it easy for users. Choose carefully, since it cannot be changed except by rare exception.
 
 - Project is and will remain actively maintained and updated. This simply means that any issues or pull requests are responded to within a reasonable amount of time by project owner(s) or collaborator(s), that security fixes are applied as soon as possible, and that the package effectively remains in a stable, working state.
 
