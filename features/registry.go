@@ -1,34 +1,34 @@
 package features
 
 // Official add-on middleware registry. To register your middleware,
-// add it to this list in the proper place.
+// add it to this list in the proper order.
 var Registry = Middlewares{
 	// Essential directives that initialize vital configuration settings
-	{"root", ""},
-	{"tls", ""},
-	{"bind", ""},
+	{"root", "", ""},
+	{"tls", "", ""},
+	{"bind", "", ""},
 
-	// Other directives that don't necessarily create HTTP handlers
-	{"startup", ""},
-	{"shutdown", ""},
-	{"git", "github.com/abiosoft/caddy-git"},
+	// Other directives that don't necessarily create HTTP handlers (services)
+	{"startup", "", ""},
+	{"shutdown", "", ""},
+	{"git", "github.com/abiosoft/caddy-git", "Deploy your site with git push."},
 
 	// Directives that inject handlers (middleware)
-	{"log", ""},
-	{"gzip", ""},
-	{"errors", ""},
-	{"header", ""},
-	{"rewrite", ""},
-	{"redir", ""},
-	{"ext", ""},
-	{"basicauth", ""},
-	{"internal", ""},
-	{"proxy", ""},
-	{"fastcgi", ""},
-	{"websocket", ""},
-	{"markdown", ""},
-	{"templates", ""},
-	{"browse", ""},
+	{"log", "", ""},
+	{"gzip", "", ""},
+	{"errors", "", ""},
+	{"header", "", ""},
+	{"rewrite", "", ""},
+	{"redir", "", ""},
+	{"ext", "", ""},
+	{"basicauth", "", ""},
+	{"internal", "", ""},
+	{"proxy", "", ""},
+	{"fastcgi", "", ""},
+	{"websocket", "", ""},
+	{"markdown", "", ""},
+	{"templates", "", ""},
+	{"browse", "", ""},
 }
 
 // Middleware is a directive/package pair
