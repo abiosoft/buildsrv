@@ -41,9 +41,12 @@ func (b *Build) Build() error {
 
 	// Perform the build
 	if b.GoArch == "arm" {
-		armInt, err := strconv.Atoi(b.GoARM)
-		if err != nil {
-			return err
+		var armInt int
+		if b.GoARM != "" {
+			armInt, err = strconv.Atoi(b.GoARM)
+			if err != nil {
+				return err
+			}
 		}
 		err = builder.BuildARM(b.GoOS, armInt, b.OutputFile)
 	} else {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
@@ -11,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/caddyserver/buildsrv/features"
 	"github.com/caddyserver/buildsrv/server"
 )
 
@@ -43,7 +45,22 @@ func main() {
 
 	http.HandleFunc("/download/build", server.BuildHandler)
 	http.Handle("/download/builds/", http.StripPrefix("/download/builds/", http.FileServer(http.Dir(server.BuildPath))))
-	http.HandleFunc("/online", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
+	http.HandleFunc("/online", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Access-Control-Allow-Origin", "*")
+		w.Write([]byte("OK"))
+	})
+	http.HandleFunc("/features.json", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+
+		var addons features.Middlewares
+		for _, mid := range features.Registry {
+			if mid.Package != "" {
+				addons = append(addons, mid)
+			}
+		}
+		json.NewEncoder(w).Encode(addons)
+	})
 
 	fmt.Println("Example URL:")
 	fmt.Println("http://localhost:5050/download/build?os=darwin&arch=amd64&features=markdown,git,templates")

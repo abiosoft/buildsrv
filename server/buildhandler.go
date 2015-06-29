@@ -15,10 +15,16 @@ import (
 
 // BuildHandler is the endpoint which creates and/or responds with builds.
 func BuildHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Expose-Headers", "Location")
+
 	goOS := r.URL.Query().Get("os")
 	goArch := r.URL.Query().Get("arch")
 	goARM := r.URL.Query().Get("arm")
 	featureList := strings.Split(r.URL.Query().Get("features"), ",")
+	if len(featureList) == 1 && featureList[0] == "" {
+		featureList = []string{}
+	}
 
 	err := checkInput(goOS, goArch, goARM, featureList)
 	if err != nil {
@@ -116,7 +122,9 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 	}
 
-	io.Copy(w, f)
+	if r.Method == "GET" {
+		io.Copy(w, f)
+	}
 }
 
 // checkInput checks the arguments for valid values and returns an error

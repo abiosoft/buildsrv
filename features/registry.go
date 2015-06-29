@@ -33,8 +33,9 @@ var Registry = Middlewares{
 
 // Middleware is a directive/package pair
 type Middleware struct {
-	Directive string
-	Package   string
+	Directive   string `json:"directive"`
+	Package     string `json:"package"`
+	Description string `json:"description"`
 }
 
 // Middlewares is a list of Middleware that can determine
@@ -54,6 +55,9 @@ func (m Middlewares) Contains(directive string) bool {
 
 // String serializes the list of directives into a comma-separated string.
 func (m Middlewares) String() string {
+	if len(m) == 0 {
+		return ""
+	}
 	var s string
 	for _, mid := range m {
 		s += mid.Directive + ","
