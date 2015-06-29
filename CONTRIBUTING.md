@@ -27,6 +27,8 @@ To add your package to the middleware registry, it must meet the following requi
 
 - Project is and will remain actively maintained and updated. This simply means that any issues or pull requests are responded to within a reasonable amount of time by project owner(s) or collaborator(s), that security fixes are applied as soon as possible, and that the package effectively remains in a stable, working state.
 
+- Maintainer agrees to create and keep a docs page updated by submitting pull requests to the [caddyserver.com repository](https://github.com/caddyserver/caddyserver.com).
+
 - The package must complement the goals of the Caddy project. Packages that are not in the best interest of the project or its users in general or which carry other implications may not be accepted. Similarly, packages should add functionality best provided by a web server. This can be a gray area, so if you're unsure, open an issue and ask before going to all the trouble.
 
 - Packages that use or rely on free third-party services (which are only free) will be decided on a case-by-case basis.
