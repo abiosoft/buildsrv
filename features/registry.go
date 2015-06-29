@@ -11,7 +11,7 @@ var Registry = Middlewares{
 	// Other directives that don't necessarily create HTTP handlers
 	{"startup", ""},
 	{"shutdown", ""},
-	{"git", ""},
+	{"git", "github.com/abiosoft/caddy-git"},
 
 	// Directives that inject handlers (middleware)
 	{"log", ""},
