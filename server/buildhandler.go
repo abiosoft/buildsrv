@@ -65,8 +65,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		buildFilename := "caddy_" + goOS + "_" + goArch + "_custom"
-		downloadFilename := buildFilename + ".zip"
+		buildFilename := "caddy"
+		downloadFilename := "caddy_" + goOS + "_" + goArch + "_custom" + ".zip"
 		if goOS == "windows" {
 			buildFilename += ".exe"
 		}
