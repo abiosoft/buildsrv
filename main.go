@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -62,7 +61,5 @@ func main() {
 		json.NewEncoder(w).Encode(addons)
 	})
 
-	fmt.Println("Example URL:")
-	fmt.Println("http://localhost:5050/download/build?os=darwin&arch=amd64&features=markdown,git,templates")
 	http.ListenAndServe(":5050", nil)
 }
