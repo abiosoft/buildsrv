@@ -53,6 +53,8 @@ Packages that are in the registry may be removed at any time for any reason. Usu
 
 1. Open a pull request to add your middleware's **directive** and **package name** to [the Registry variable in registry.go](https://github.com/caddyserver/buildsrv/blob/master/features/registry.go).
 
-2. That's it! We'll take a look.
+2. Open a pull request to add your middleware's **documentation** to the [caddyserver.com repository](https://github.com/caddyserver/caddyserver.com).
+
+3. That's it! We'll take a look.
 
 By submitting a pull request, you verify that you are the project owner or that the project owner has given permission to integrate the package with Caddy. You also understand and agree to comply with the terms and requirements. Adding packages to the registry does not imply endorsement by Caddy, but you may say that your package is available as Caddy middleware.
