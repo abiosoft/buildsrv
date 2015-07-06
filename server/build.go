@@ -110,9 +110,7 @@ func (b *Build) finish() {
 			time.Sleep(BuildExpiry)
 
 			// Delete the job
-			buildsMutex.Lock()
-			delete(builds, b.Hash)
-			buildsMutex.Unlock()
+			deleteBuildJob(b.Hash)
 
 			// Delete file and its folder
 			err := os.RemoveAll(filepath.Dir(b.DownloadFile))

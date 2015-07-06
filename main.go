@@ -25,6 +25,13 @@ func init() {
 		log.Fatal("Cannot locate GOPATH:", err)
 	}
 	server.CaddyPath = strings.TrimSpace(string(result)) + "/src/" + server.MainCaddyPackage
+
+	// Log to a file
+	outfile, err := os.OpenFile("builds.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatal("Couldn't open log file:", err)
+	}
+	log.SetOutput(outfile)
 }
 
 func main() {

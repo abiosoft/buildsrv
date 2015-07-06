@@ -83,14 +83,16 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			Hash:             hash,
 		}
 
+		// Save the build, indicating it's in progress
 		buildsMutex.Lock()
-		builds[hash] = b // save the build
+		builds[hash] = b
 		buildsMutex.Unlock()
 
 		// Perform build (blocking)
 		err = b.Build()
 		if err != nil {
 			handleError(w, r, err, http.StatusInternalServerError)
+			deleteBuildJob(hash) // delete the build; it didn't succeed
 			return
 		}
 	}
@@ -108,6 +110,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	f, err := os.Open(b.DownloadFile)
 	if err != nil {
 		handleError(w, r, err, http.StatusInternalServerError)
+		deleteBuildJob(hash)
 		return
 	}
 	defer f.Close()
@@ -125,6 +128,15 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		io.Copy(w, f)
 	}
+}
+
+// deleteBuild deletes a build from the map.
+// It is safe for concurrent use. It does NOT
+// delete the build from the file system.
+func deleteBuildJob(hash string) {
+	buildsMutex.Lock()
+	delete(builds, hash)
+	buildsMutex.Unlock()
 }
 
 // checkInput checks the arguments for valid values and returns an error
