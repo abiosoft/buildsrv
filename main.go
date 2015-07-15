@@ -51,10 +51,6 @@ func main() {
 
 	http.HandleFunc("/download/build", server.BuildHandler)
 	http.Handle("/download/builds/", http.StripPrefix("/download/builds/", http.FileServer(http.Dir(server.BuildPath))))
-	http.HandleFunc("/online", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Access-Control-Allow-Origin", "*")
-		w.Write([]byte("OK"))
-	})
 	http.HandleFunc("/features.json", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
