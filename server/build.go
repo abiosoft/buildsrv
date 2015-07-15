@@ -46,9 +46,9 @@ func (b *Build) Build() error {
 				return err
 			}
 		}
-		err = builder.BuildARM(b.GoOS, armInt, b.OutputFile)
+		err = builder.BuildStaticARM(b.GoOS, armInt, b.OutputFile)
 	} else {
-		err = builder.Build(b.GoOS, b.GoArch, b.OutputFile)
+		err = builder.BuildStatic(b.GoOS, b.GoArch, b.OutputFile)
 	}
 	if err != nil {
 		return err
