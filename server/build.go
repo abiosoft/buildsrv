@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"sync"
 	"time"
 
 	"github.com/caddyserver/buildsrv/features"
@@ -15,7 +14,6 @@ import (
 
 // Build represents a custom build job.
 type Build struct {
-	sync.Mutex
 	DoneChan         chan struct{}
 	OutputFile       string
 	DownloadFilename string
