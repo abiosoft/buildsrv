@@ -14,21 +14,23 @@ import (
 
 // Build represents a custom build job.
 type Build struct {
-	DoneChan         chan struct{}
-	OutputFile       string
-	DownloadFilename string
-	DownloadFile     string
-	GoOS             string
-	GoArch           string
-	GoARM            string
-	Features         features.Middlewares
-	Hash             string
-	Expires          time.Time
-	finished         bool
+	DoneChan                chan struct{}
+	OutputFile              string
+	DownloadFilename        string
+	DownloadFileCompression int
+	DownloadFile            string
+	GoOS                    string
+	GoArch                  string
+	GoARM                   string
+	Features                features.Middlewares
+	Hash                    string
+	Expires                 time.Time
+	finished                bool
 }
 
 // Build performs a build job. This function is blocking. If the build
 // job succeeds, it will automatically delete itself when it expires.
+// If it fails, resources are not automatically cleaned up.
 func (b *Build) Build() error {
 	// Prepare the build
 	builder, err := caddybuild.PrepareBuild(b.Features)
@@ -54,13 +56,20 @@ func (b *Build) Build() error {
 		return err
 	}
 
-	// Compress the build
-	err = Zip(b.DownloadFile, []string{
+	// File list to include with build, then compress the build
+	fileList := []string{
 		filepath.Join(CaddyPath, "/dist/README.txt"),
 		filepath.Join(CaddyPath, "/dist/LICENSES.txt"),
 		filepath.Join(CaddyPath, "/dist/CHANGES.txt"),
 		b.OutputFile,
-	})
+	}
+	if b.DownloadFileCompression == CompressZip {
+		err = Zip(b.DownloadFile, fileList)
+	} else if b.DownloadFileCompression == CompressTarGz {
+		err = TarGz(b.DownloadFile, fileList)
+	} else {
+		return fmt.Errorf("unknown compress type %v", b.DownloadFileCompression)
+	}
 	if err != nil {
 		return err
 	}

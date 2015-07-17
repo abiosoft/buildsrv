@@ -65,25 +65,39 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
+		// Determine the remaining build information and reserve the build job
+
+		downloadFileCompression := CompressZip
+		if goOS == "linux" || goOS == "freebsd" || goOS == "openbsd" {
+			downloadFileCompression = CompressTarGz
+		}
+
 		buildFilename := "caddy"
-		downloadFilename := "caddy_" + goOS + "_" + goArch + "_custom" + ".zip"
 		if goOS == "windows" {
 			buildFilename += ".exe"
 		}
 
-		b = &Build{
-			DoneChan:         make(chan struct{}),
-			OutputFile:       downloadPath + "/" + buildFilename,
-			DownloadFile:     downloadPath + "/" + downloadFilename,
-			DownloadFilename: downloadFilename,
-			GoOS:             goOS,
-			GoArch:           goArch,
-			GoARM:            goARM,
-			Features:         orderedFeatures,
-			Hash:             hash,
+		downloadFilename := "caddy_" + goOS + "_" + goArch + "_custom"
+		if downloadFileCompression == CompressZip {
+			downloadFilename += ".zip"
+		} else {
+			downloadFilename += ".tar.gz"
 		}
 
-		// Save the build, indicating it's in progress
+		b = &Build{
+			DoneChan:                make(chan struct{}),
+			OutputFile:              downloadPath + "/" + buildFilename,
+			DownloadFile:            downloadPath + "/" + downloadFilename,
+			DownloadFilename:        downloadFilename,
+			DownloadFileCompression: downloadFileCompression,
+			GoOS:     goOS,
+			GoArch:   goArch,
+			GoARM:    goARM,
+			Features: orderedFeatures,
+			Hash:     hash,
+		}
+
+		// Save the build, indicating currently in progress
 		buildsMutex.Lock()
 		builds[hash] = b
 		buildsMutex.Unlock()
@@ -185,3 +199,8 @@ loop:
 	}
 	return orderedFeatures
 }
+
+const (
+	CompressZip = iota
+	CompressTarGz
+)
