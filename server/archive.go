@@ -2,11 +2,12 @@ package server
 
 import (
 	"archive/tar"
-	"archive/zip"
-	"compress/gzip"
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/klauspost/compress/gzip"
+	"github.com/klauspost/compress/zip"
 )
 
 // Zip creates a .zip file in the location zipPath containing
