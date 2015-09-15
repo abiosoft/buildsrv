@@ -18,6 +18,7 @@ var Registry = Middlewares{
 	{"gzip", "", ""},
 	{"errors", "", ""},
 	{"header", "", ""},
+	{"ipfilter", "github.com/pyed/ipfilter", "Block or allow clients based on IP origin."},
 	{"rewrite", "", ""},
 	{"redir", "", ""},
 	{"ext", "", ""},
