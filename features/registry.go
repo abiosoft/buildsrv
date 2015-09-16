@@ -19,6 +19,7 @@ var Registry = Middlewares{
 	{"errors", "", ""},
 	{"header", "", ""},
 	{"ipfilter", "github.com/pyed/ipfilter", "Block or allow clients based on IP origin."},
+	{"jsonp", "github.com/pschlump/caddy-jsonp", "JSONP capability."},
 	{"rewrite", "", ""},
 	{"redir", "", ""},
 	{"ext", "", ""},
