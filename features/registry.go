@@ -30,7 +30,7 @@ var Registry = Middlewares{
 	{"markdown", "", ""},
 	{"templates", "", ""},
 	{"browse", "", ""},
-	{"staticmin", "github.com/hacdias/staticmin", "Powerful and easy static site generator with admin interface."},
+	{"cms", "github.com/hacdias/caddy-cms", "Powerful and easy static site generator with admin interface."},
 }
 
 // Middleware is a directive/package pair
