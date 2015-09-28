@@ -23,6 +23,7 @@ var Registry = Middlewares{
 	{"redir", "", ""},
 	{"ext", "", ""},
 	{"basicauth", "", ""},
+	{"jsonp", "github.com/pschlump/caddy-jsonp", "Wrap regular JSON responses as JSONP"},
 	{"internal", "", ""},
 	{"proxy", "", ""},
 	{"fastcgi", "", ""},
