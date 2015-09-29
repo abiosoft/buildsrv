@@ -17,6 +17,7 @@ var Registry = Middlewares{
 	{"log", "", ""},
 	{"gzip", "", ""},
 	{"errors", "", ""},
+	{"search", "github.com/pedronasser/caddy-search", "Activates a site search engine"},
 	{"header", "", ""},
 	{"ipfilter", "github.com/pyed/ipfilter", "Block or allow clients based on IP origin."},
 	{"rewrite", "", ""},
