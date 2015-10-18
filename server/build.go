@@ -33,7 +33,7 @@ type Build struct {
 // If it fails, resources are not automatically cleaned up.
 func (b *Build) Build() error {
 	// Prepare the build
-	builder, err := caddybuild.PrepareBuild(b.Features, true)
+	builder, err := caddybuild.PrepareBuild(b.Features, false) // TODO: PullLatest (go get -u) DISABLED for stability; updates are manual for now
 	defer builder.Teardown() // always perform cleanup
 	if err != nil {
 		return err
