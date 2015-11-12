@@ -20,6 +20,7 @@ var Registry = Middlewares{
 	{"ipfilter", "github.com/pyed/ipfilter", "Block or allow clients based on IP origin."},
 	{"search", "github.com/pedronasser/caddy-search", "Activates a site search engine"},
 	{"header", "", ""},
+	{"cors", "github.com/captncraig/cors/caddy", "Enable Cross Origin Resource Sharing"},
 	{"rewrite", "", ""},
 	{"redir", "", ""},
 	{"ext", "", ""},
