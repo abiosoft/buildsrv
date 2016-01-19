@@ -1,7 +1,7 @@
 Contributing 
 =============
 
-**[Join us on Slack](https://gophers.slack.com/messages/caddy/)** to chat with other Caddy developers! ([Request an invite](http://bit.ly/go-slack-signup), then join the #caddy channel.)
+**[Join us on Gitter](https://gitter.im/mholt/caddy)** to chat with other Caddy developers!
 
 
 ## The Middleware Registry
