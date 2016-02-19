@@ -34,7 +34,7 @@ type Build struct {
 func (b *Build) Build() error {
 	// Prepare the build
 	builder, err := caddybuild.PrepareBuild(b.Features, false) // TODO: PullLatest (go get -u) DISABLED for stability; updates are manual for now
-	defer builder.Teardown() // always perform cleanup
+	defer builder.Teardown()                                   // always perform cleanup
 	if err != nil {
 		return err
 	}
@@ -49,6 +49,8 @@ func (b *Build) Build() error {
 			}
 		}
 		err = builder.BuildStaticARM(b.GoOS, armInt, b.OutputFile)
+	} else if b.GoOS == "darwin" { // At time of writing, building with CGO_ENABLED=0 for darwin can break stuff: https://www.reddit.com/r/golang/comments/46bd5h/ama_we_are_the_go_contributors_ask_us_anything/d03rmc9
+		err = builder.Build(b.GoOS, b.GoArch, b.OutputFile)
 	} else {
 		err = builder.BuildStatic(b.GoOS, b.GoArch, b.OutputFile)
 	}
