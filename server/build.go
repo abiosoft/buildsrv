@@ -47,6 +47,8 @@ func (b *Build) Build() error {
 			if err != nil {
 				return err
 			}
+		} else {
+			armInt = 7
 		}
 		err = builder.BuildStaticARM(b.GoOS, armInt, b.OutputFile)
 	} else if b.GoOS == "darwin" { // At time of writing, building with CGO_ENABLED=0 for darwin can break stuff: https://www.reddit.com/r/golang/comments/46bd5h/ama_we_are_the_go_contributors_ask_us_anything/d03rmc9
