@@ -11,6 +11,7 @@ var Registry = Middlewares{
 	// Other directives that don't necessarily create HTTP handlers (services)
 	{"startup", "", ""},
 	{"shutdown", "", ""},
+	{"realip", "github.com/captncraig/caddy-realip", "Restore original IP when behind a proxy."}
 	{"git", "github.com/abiosoft/caddy-git", "Deploy your site with git push."},
 
 	// Directives that inject handlers (middleware)
