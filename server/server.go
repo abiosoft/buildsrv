@@ -33,6 +33,7 @@ var (
 	allowedOS   = list{"linux", "darwin", "windows", "freebsd", "openbsd"}
 	allowedArch = list{"386", "amd64", "arm"}
 	allowedARM  = list{"5", "6", "7"}
+	defaultARM  = 7
 
 	builds      = make(map[string]*Build)
 	buildsMutex sync.Mutex // protects the builds map
