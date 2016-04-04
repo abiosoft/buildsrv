@@ -29,6 +29,7 @@ var Registry = Middlewares{
 	{"basicauth", "", ""},
 	{"jwt", "github.com/BTBurke/caddy-jwt", "JWT authorization"},
 	{"jsonp", "github.com/pschlump/caddy-jsonp", "Wrap regular JSON responses as JSONP"},
+	{"upload", "blitznote.com/src/caddy.upload", "Upload files"},
 	{"internal", "", ""},
 	{"proxy", "", ""},
 	{"fastcgi", "", ""},
