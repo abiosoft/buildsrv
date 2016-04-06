@@ -38,6 +38,8 @@ func (b *Build) Build() error {
 	if err != nil {
 		return err
 	}
+	builder.CommandName = "./build.bash"
+	origRepoPath := filepath.Join(os.Getenv("GOPATH"), "src/github.com/mholt/caddy")
 
 	// Perform the build
 	if b.GoArch == "arm" {
@@ -50,11 +52,11 @@ func (b *Build) Build() error {
 		} else {
 			armInt = defaultARM
 		}
-		err = builder.BuildStaticARM(b.GoOS, armInt, b.OutputFile)
+		err = builder.BuildStaticARM(b.GoOS, armInt, b.OutputFile, origRepoPath)
 	} else if b.GoOS == "darwin" { // At time of writing, building with CGO_ENABLED=0 for darwin can break stuff: https://www.reddit.com/r/golang/comments/46bd5h/ama_we_are_the_go_contributors_ask_us_anything/d03rmc9
-		err = builder.Build(b.GoOS, b.GoArch, b.OutputFile)
+		err = builder.Build(b.GoOS, b.GoArch, b.OutputFile, origRepoPath)
 	} else {
-		err = builder.BuildStatic(b.GoOS, b.GoArch, b.OutputFile)
+		err = builder.BuildStatic(b.GoOS, b.GoArch, b.OutputFile, origRepoPath)
 	}
 	if err != nil {
 		return err
@@ -75,7 +77,7 @@ func (b *Build) Build() error {
 		return fmt.Errorf("unknown compress type %v", b.DownloadFileCompression)
 	}
 	if err != nil {
-		return err
+		return fmt.Errorf("error compressing: %v", err)
 	}
 
 	// Delete uncompressed binary
