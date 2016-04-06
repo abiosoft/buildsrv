@@ -67,6 +67,7 @@ func (b *Build) Build() error {
 		filepath.Join(CaddyPath, "/dist/README.txt"),
 		filepath.Join(CaddyPath, "/dist/LICENSES.txt"),
 		filepath.Join(CaddyPath, "/dist/CHANGES.txt"),
+		filepath.Join(CaddyPath, "/dist/init"),
 		b.OutputFile,
 	}
 	if b.DownloadFileCompression == CompressZip {
