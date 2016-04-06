@@ -30,10 +30,38 @@ const (
 )
 
 var (
-	allowedOS   = list{"linux", "darwin", "windows", "freebsd", "openbsd"}
-	allowedArch = list{"386", "amd64", "arm"}
-	allowedARM  = list{"5", "6", "7"}
-	defaultARM  = 7
+	allowed = combos{
+		{os: "darwin", arch: "386"},
+		{os: "darwin", arch: "amd64"},
+		{os: "darwin", arch: "arm"},
+		//{os: "darwin", arch: "arm64"},
+		//{os: "dragonfly", arch: "amd64"},
+		{os: "freebsd", arch: "386"},
+		{os: "freebsd", arch: "amd64"},
+		{os: "freebsd", arch: "arm"},
+		{os: "linux", arch: "386"},
+		{os: "linux", arch: "amd64"},
+		{os: "linux", arch: "arm"},
+		{os: "linux", arch: "arm64"},
+		{os: "linux", arch: "ppc64"},
+		{os: "linux", arch: "ppc64le"},
+		{os: "linux", arch: "mips64"},
+		//{os: "linux", arch: "mips64le"},
+		{os: "netbsd", arch: "386"},
+		{os: "netbsd", arch: "amd64"},
+		{os: "netbsd", arch: "arm"},
+		{os: "openbsd", arch: "386"},
+		{os: "openbsd", arch: "amd64"},
+		{os: "openbsd", arch: "arm"},
+		//{os: "plan9", arch: "386"},
+		//{os: "plan9", arch: "amd64"},
+		{os: "solaris", arch: "amd64"},
+		{os: "windows", arch: "386"},
+		{os: "windows", arch: "amd64"},
+	}
+
+	allowedARM = list{"5", "6", "7"}
+	defaultARM = 7
 
 	builds      = make(map[string]*Build)
 	buildsMutex sync.Mutex // protects the builds map
@@ -51,16 +79,28 @@ func handleError(w http.ResponseWriter, r *http.Request, err error, status int) 
 	}
 }
 
-// list is just any list of strings that can determine if
-// a string belongs to it.
 type list []string
 
-// contains determines if target is in l.
 func (l list) contains(target string) bool {
-	for _, str := range l {
-		if str == target {
+	for _, s := range l {
+		if s == target {
 			return true
 		}
 	}
 	return false
+}
+
+type combos []platform
+
+func (c combos) valid(os, arch string) bool {
+	for _, pl := range c {
+		if pl.os == os && pl.arch == arch {
+			return true
+		}
+	}
+	return false
+}
+
+type platform struct {
+	os, arch string
 }

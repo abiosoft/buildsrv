@@ -165,11 +165,8 @@ func checkInput(goOS, goArch, goARM string, featureList []string) error {
 	}
 
 	// Check for valid input
-	if !allowedOS.contains(goOS) {
-		return errors.New("os not supported")
-	}
-	if !allowedArch.contains(goArch) {
-		return errors.New("arch not supported")
+	if !allowed.valid(goOS, goArch) {
+		return errors.New(goOS + "/" + goArch + " not supported")
 	}
 	if goARM != "" && !allowedARM.contains(goARM) {
 		return errors.New("arm version not supported")
