@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -58,7 +59,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		for {
 			// find a suitable random number not already in use
 			random := strconv.Itoa(rand.Intn(100) + 899)
-			downloadPath = BuildPath + "/" + ts + random
+			downloadPath = filepath.Join(BuildPath, ts+random)
 			_, err := os.Stat(downloadPath)
 			if os.IsNotExist(err) {
 				break
@@ -67,9 +68,9 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Determine the remaining build information and reserve the build job
 
-		downloadFileCompression := CompressZip
-		if goOS == "linux" || goOS == "freebsd" || goOS == "openbsd" {
-			downloadFileCompression = CompressTarGz
+		downloadFileCompression := CompressTarGz
+		if goOS == "windows" || goOS == "darwin" {
+			downloadFileCompression = CompressZip
 		}
 
 		buildFilename := "caddy"

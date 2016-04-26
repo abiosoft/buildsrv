@@ -10,6 +10,7 @@ import (
 
 	"github.com/caddyserver/buildsrv/features"
 	"github.com/caddyserver/caddydev/caddybuild"
+	"github.com/mholt/archiver"
 )
 
 // Build represents a custom build job.
@@ -71,9 +72,9 @@ func (b *Build) Build() error {
 		b.OutputFile,
 	}
 	if b.DownloadFileCompression == CompressZip {
-		err = Zip(b.DownloadFile, fileList)
+		err = archiver.Zip(b.DownloadFile, fileList)
 	} else if b.DownloadFileCompression == CompressTarGz {
-		err = TarGz(b.DownloadFile, fileList)
+		err = archiver.TarGz(b.DownloadFile, fileList)
 	} else {
 		return fmt.Errorf("unknown compress type %v", b.DownloadFileCompression)
 	}

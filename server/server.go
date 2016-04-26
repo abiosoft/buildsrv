@@ -30,6 +30,8 @@ const (
 )
 
 var (
+	// See https://golang.org/doc/install/source#environment
+	// Commented builds are problematic.
 	allowed = combos{
 		{os: "darwin", arch: "386"},
 		{os: "darwin", arch: "amd64"},
