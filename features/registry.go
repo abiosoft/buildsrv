@@ -17,6 +17,7 @@ var Registry = Middlewares{
 	// Directives that inject handlers (middleware)
 	{"log", "", ""},
 	{"gzip", "", ""},
+	{"locale", "github.com/simia-tech/caddy-locale", "Locale detection"},
 	{"errors", "", ""},
 	{"ipfilter", "github.com/pyed/ipfilter", "Block or allow clients based on IP origin."},
 	{"search", "github.com/pedronasser/caddy-search", "Activates a site search engine"},
@@ -40,7 +41,6 @@ var Registry = Middlewares{
 	{"hugo", "github.com/hacdias/caddy-hugo", "Powerful and easy static site generator with admin interface."},
 	{"mailout", "github.com/SchumacherFM/mailout", "SMTP client with REST API. Send emails with optional PGP encryption"},
 	{"prometheus", "github.com/miekg/caddy-prometheus", "Prometheus metrics"},
-	{"locale", "github.com/simia-tech/caddy-locale", "Locale detection"},
 }
 
 // Middleware is a directive/package pair
