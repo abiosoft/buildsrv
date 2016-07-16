@@ -38,6 +38,22 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		goARM = ""
 	}
 
+	// Ensure required features are implicitly added
+	for _, plugin := range features.Registry {
+		if plugin.Required {
+			var found bool
+			for _, feat := range featureList {
+				if feat == plugin.Name {
+					found = true
+					break
+				}
+			}
+			if !found {
+				featureList = append(featureList, plugin.Name)
+			}
+		}
+	}
+
 	// Put features in order to keep hashes consistent and for use in the codegen function
 	orderedFeatures := sortFeatures(featureList)
 
@@ -184,12 +200,12 @@ func checkInput(goOS, goArch, goARM string, featureList []string) error {
 }
 
 // sortFeatures sorts features to the order in which they are registered.
-func sortFeatures(featureList []string) features.Middlewares {
-	var orderedFeatures features.Middlewares // TODO - could this be a []string instead? Would make things a little simpler, not needing that String() method
+func sortFeatures(featureList []string) features.Plugins {
+	var orderedFeatures features.Plugins
 loop:
 	for _, m := range features.Registry {
 		for _, feature := range featureList {
-			if feature == m.Directive {
+			if feature == m.Name {
 				orderedFeatures = append(orderedFeatures, m)
 				continue loop
 			}

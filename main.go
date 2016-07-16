@@ -48,21 +48,18 @@ func main() {
 
 		os.Exit(0)
 	}()
-
 	http.HandleFunc("/download/build", server.BuildHandler)
 	http.Handle("/download/builds/", http.StripPrefix("/download/builds/", http.FileServer(http.Dir(server.BuildPath))))
 	http.HandleFunc("/features.json", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
-
-		var addons features.Middlewares
-		for _, mid := range features.Registry {
-			if mid.Package != "" {
-				addons = append(addons, mid)
+		var plugins features.Plugins
+		for _, plugin := range features.Registry {
+			if plugin.Name != "" {
+				plugins = append(plugins, plugin)
 			}
 		}
-		json.NewEncoder(w).Encode(addons)
+		json.NewEncoder(w).Encode(plugins)
 	})
-
 	http.ListenAndServe(":5050", nil)
 }

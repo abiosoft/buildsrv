@@ -23,7 +23,7 @@ type Build struct {
 	GoOS                    string
 	GoArch                  string
 	GoARM                   string
-	Features                features.Middlewares
+	Features                features.Plugins
 	Hash                    string
 	Expires                 time.Time
 	finished                bool
