@@ -11,11 +11,6 @@ You've written a great middleware or service integration for Caddy - now how do 
 All you need to do is [submit a pull request](https://github.com/caddyserver/buildsrv/pulls). But first, make sure your package conforms to the requirements listed in the [contributing guidelines](https://github.com/caddyserver/buildsrv/blob/master/CONTRIBUTING.md). Those guidelines also have instructions for submitting your PR.
 
 
-### License
-
-This program is copyrighted, proprietary property and, as such, no license is granted for commercial use or redistribution.
-
-
 ### Disclaimer
 
 Caddy (the project and its contributors) are not affiliated with nor endorse third-party code that may be linked to from this project and is/are not to be held liable for such integrations. This software is provided as-is and you assume all risk.
