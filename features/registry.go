@@ -93,13 +93,14 @@ var Registry = Plugins{
 	// 	Description: "Authorization with JSON Web Tokens",
 	// 	DocsURL:     "/docs/jwt",
 	// },
-	{
-		Type:        DirectivePlugin,
-		Name:        "jsonp",
-		Import:      "github.com/pschlump/caddy-jsonp",
-		Description: "Wrap JSON responses as JSONP",
-		DocsURL:     "/docs/jsonp",
-	},
+	// TODO. Waiting for pschlump to update jsonp to the 0.9 plugin format
+	// {
+	// 	Type:        DirectivePlugin,
+	// 	Name:        "jsonp",
+	// 	Import:      "github.com/pschlump/caddy-jsonp",
+	// 	Description: "Wrap JSON responses as JSONP",
+	// 	DocsURL:     "/docs/jsonp",
+	// },
 	// TODO. Waiting for wmark to update upload to the 0.9 plugin format
 	// {
 	// 	Type:        DirectivePlugin,
