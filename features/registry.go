@@ -84,13 +84,14 @@ var Registry = Plugins{
 		Description: "Easily configure Cross-Origin Resource Sharing",
 		DocsURL:     "/docs/cors",
 	},
-	{
-		Type:        DirectivePlugin,
-		Name:        "jwt",
-		Import:      "github.com/BTBurke/caddy-jwt",
-		Description: "Authorization with JSON Web Tokens",
-		DocsURL:     "/docs/jwt",
-	},
+	// TODO. Waiting for BTBurke to update jwt to the 0.9 plugin format
+	// {
+	// 	Type:        DirectivePlugin,
+	// 	Name:        "jwt",
+	// 	Import:      "github.com/BTBurke/caddy-jwt",
+	// 	Description: "Authorization with JSON Web Tokens",
+	// 	DocsURL:     "/docs/jwt",
+	// },
 	{
 		Type:        DirectivePlugin,
 		Name:        "jsonp",
