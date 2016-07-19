@@ -77,13 +77,14 @@ var Registry = Plugins{
 		Description: "Site search engine",
 		DocsURL:     "/docs/search",
 	},
-	{
-		Type:        DirectivePlugin,
-		Name:        "cors",
-		Import:      "github.com/captncraig/cors/caddy",
-		Description: "Easily configure Cross-Origin Resource Sharing",
-		DocsURL:     "/docs/cors",
-	},
+	// TODO: Waiting for captncraig to update cors to the 0.9 plugin format
+	// {
+	// 	Type:        DirectivePlugin,
+	// 	Name:        "cors",
+	// 	Import:      "github.com/captncraig/cors/caddy",
+	// 	Description: "Easily configure Cross-Origin Resource Sharing",
+	// 	DocsURL:     "/docs/cors",
+	// },
 	// TODO. Waiting for BTBurke to update jwt to the 0.9 plugin format
 	// {
 	// 	Type:        DirectivePlugin,
