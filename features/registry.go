@@ -136,6 +136,13 @@ var Registry = Plugins{
 		Description: "Prometheus metrics integration",
 		DocsURL:     "/docs/prometheus",
 	},
+	{
+		Type:        DirectivePlugin,
+		Name:        "ratelimit",
+		Import:      "github.com/xuqingfeng/caddy-rate-limit",
+		Description: "Limit rate of requests",
+		DocsURL:     "/docs/ratelimit",
+	},
 
 	// DNS providers
 	{
