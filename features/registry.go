@@ -100,14 +100,13 @@ var Registry = Plugins{
 	// 	Description: "Wrap JSON responses as JSONP",
 	// 	DocsURL:     "/docs/jsonp",
 	// },
-	// TODO. Waiting for wmark to update upload to the 0.9 plugin format
-	// {
-	// 	Type:        DirectivePlugin,
-	// 	Name:        "upload",
-	// 	Import:      "blitznote.com/src/caddy.upload",
-	// 	Description: "Upload files",
-	// 	DocsURL:     "/docs/upload",
-	// },
+	{
+		Type:        DirectivePlugin,
+		Name:        "upload",
+		Import:      "blitznote.com/src/caddy.upload",
+		Description: "Upload files",
+		DocsURL:     "/docs/upload",
+	},
 	{
 		Type:        DirectivePlugin,
 		Name:        "filemanager",
