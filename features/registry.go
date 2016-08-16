@@ -78,13 +78,13 @@ var Registry = Plugins{
 		DocsURL:     "/docs/search",
 	},
 	// TODO: Waiting for captncraig to update cors to the 0.9 plugin format
-	// {
-	// 	Type:        DirectivePlugin,
-	// 	Name:        "cors",
-	// 	Import:      "github.com/captncraig/cors/caddy",
-	// 	Description: "Easily configure Cross-Origin Resource Sharing",
-	// 	DocsURL:     "/docs/cors",
-	// },
+	{
+		Type:        DirectivePlugin,
+		Name:        "cors",
+		Import:      "github.com/captncraig/cors/caddy",
+		Description: "Easily configure Cross-Origin Resource Sharing",
+		DocsURL:     "/docs/cors",
+	},
 	{
 		Type:        DirectivePlugin,
 		Name:        "jwt",
